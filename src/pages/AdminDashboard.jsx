@@ -21,7 +21,7 @@ const AdminDashboard = () => {
           Admin Dashboard
         </h1>
 
-        <TaskForm onTaskCreated={handleTaskCreated} />git
+        <TaskForm onTaskCreated={handleTaskCreated} />
 
         <h2 className="text-lg font-semibold mb-4">
           All Tasks
