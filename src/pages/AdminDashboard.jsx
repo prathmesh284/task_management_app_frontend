@@ -4,18 +4,22 @@ import StatCard from "../components/StatCard";
 import ActiveTasks from "../components/ActiveTasks";
 import { useNavigate } from "react-router-dom";
 import { FiPlus } from "react-icons/fi";
+import { getEmployeeCount } from "../api/user.api";
 
 const AdminDashboard = () => {
     const [tasks, setTasks] = useState([]);
     const navigate = useNavigate();
+    const [totalEmployees, setTotalEmployees] = useState(0);
 
     useEffect(() => {
         api.get("/tasks/").then((res) => setTasks(res.data));
     }, []);
 
-    const totalEmployees = new Set(
-        tasks.map((t) => t.assigned_to)
-    ).size;
+    useEffect(() => {
+        getEmployeeCount().then((res) =>
+            setTotalEmployees(res.total_employees)
+        );
+    }, []);
 
     return (
         <div className="min-h-screen bg-gray-100">
@@ -29,6 +33,7 @@ const AdminDashboard = () => {
                     <StatCard
                         title="Total Employees"
                         value={totalEmployees}
+                        onClick={() => navigate("/admin/users")}
                     />
 
                     <StatCard
