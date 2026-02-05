@@ -23,7 +23,7 @@ const AdminDashboard = () => {
 
         <TaskForm onTaskCreated={handleTaskCreated} />
 
-        <h2 className="text-lg font-semibold mb-4">
+        <h2 className="text-lg font-semibold mb-4 ml-1">
           All Tasks
         </h2>
 
