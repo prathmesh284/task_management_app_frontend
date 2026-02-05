@@ -4,6 +4,8 @@ import AdminDashboard from "./pages/AdminDashboard";
 import EmployeeDashboard from "./pages/EmployeeDashboard";
 import ProtectedRoute from "./routes/ProtectedRoute";
 import { AuthProvider } from "./context/AuthContext";
+import TaskForm from "./components/TaskForm";
+import TaskHistory from "./components/TaskHistory";
 
 function App() {
   return (
@@ -27,6 +29,24 @@ function App() {
             element={
               <ProtectedRoute role="admin">
                 <AdminDashboard />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/admin/add-task"
+            element={
+              <ProtectedRoute role="admin">
+                <TaskForm/>
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/admin/all-tasks"
+            element={
+              <ProtectedRoute role="admin">
+                <TaskHistory/>
               </ProtectedRoute>
             }
           />
