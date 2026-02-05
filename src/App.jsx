@@ -6,6 +6,7 @@ import ProtectedRoute from "./routes/ProtectedRoute";
 import { AuthProvider } from "./context/AuthContext";
 import TaskForm from "./components/TaskForm";
 import TaskHistory from "./components/TaskHistory";
+import UsersPage from "./pages/UsersPage";
 
 function App() {
   return (
@@ -34,10 +35,19 @@ function App() {
           />
 
           <Route
+            path="/admin/users"
+            element={
+              <ProtectedRoute role="admin">
+                <UsersPage />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
             path="/admin/add-task"
             element={
               <ProtectedRoute role="admin">
-                <TaskForm/>
+                <TaskForm />
               </ProtectedRoute>
             }
           />
@@ -46,7 +56,7 @@ function App() {
             path="/admin/all-tasks"
             element={
               <ProtectedRoute role="admin">
-                <TaskHistory/>
+                <TaskHistory />
               </ProtectedRoute>
             }
           />
