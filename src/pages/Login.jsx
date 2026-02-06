@@ -25,7 +25,7 @@ const Login = () => {
       if (payload.role === "admin") {
         navigate("/admin");
       } else if (payload.role === "employee") {
-        navigate("/");
+        navigate("/employee");
       } else {
         setError("Unauthorized role");
       }

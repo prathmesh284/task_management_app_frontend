@@ -7,8 +7,8 @@ const ActiveTasks = ({ tasks }) => {
 
   return (
     <div>
-      <h2 className="text-lg font-semibold mb-4">
-        Active Tasks
+      <h2 className="text-lg font-semibold mb-4 ml-1">
+        Active Tasks Due In 7 Days ({tasks.length})
       </h2>
 
       {activeTasks.length === 0 ? (

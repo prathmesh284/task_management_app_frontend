@@ -5,15 +5,22 @@ import ActiveTasks from "../components/ActiveTasks";
 import { useNavigate } from "react-router-dom";
 import { FiPlus } from "react-icons/fi";
 import { getEmployeeCount } from "../api/user.api";
+import { getCount } from "../api/task.api";
 
 const AdminDashboard = () => {
     const [tasks, setTasks] = useState([]);
+    const [totalTaskLength, setTotalTaskLength] = useState(0);
     const navigate = useNavigate();
     const [totalEmployees, setTotalEmployees] = useState(0);
 
     useEffect(() => {
-        api.get("/tasks/").then((res) => setTasks(res.data));
+        api.get("/tasks/upcoming?days=7")
+            .then((res) => setTasks(res.data));
     }, []);
+
+    useEffect(() => {
+        getCount().then((res) => setTotalTaskLength(res[0].count));
+    }, [])
 
     useEffect(() => {
         getEmployeeCount().then((res) =>
@@ -44,7 +51,7 @@ const AdminDashboard = () => {
 
                     <StatCard
                         title="Total Tasks"
-                        value={tasks.length}
+                        value={totalTaskLength}
                         onClick={() => navigate("/admin/all-tasks")}
                     />
                 </div>
