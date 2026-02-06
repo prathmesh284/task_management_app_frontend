@@ -7,6 +7,7 @@ import { AuthProvider } from "./context/AuthContext";
 import TaskForm from "./components/TaskForm";
 import TaskHistory from "./components/TaskHistory";
 import UsersPage from "./pages/UsersPage";
+import Register from "./pages/Register";
 
 function App() {
   return (
@@ -15,6 +16,8 @@ function App() {
 
         <Routes>
           <Route path="/" element={<Login />} />
+          
+          <Route path="/register" element={<Register/>}/>
 
           <Route
             path="/employee"
