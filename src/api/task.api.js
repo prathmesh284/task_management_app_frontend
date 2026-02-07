@@ -20,3 +20,13 @@ export const getCount = async () => {
   console.log(res);
   return res.data;
 }
+
+export const deleteTask = async (taskId) => {
+  const res = await api.delete(`/tasks/${taskId}`);
+  return res.data;
+};
+
+export const updateTask = async (taskId, payload) => {
+  const res = await api.put(`/tasks/${taskId}`, payload);
+  return res.data;
+};
