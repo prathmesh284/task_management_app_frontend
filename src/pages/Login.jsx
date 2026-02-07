@@ -11,8 +11,13 @@ const Login = () => {
   const { login } = useAuth();
   const navigate = useNavigate();
 
-  const decodeToken = (token) =>
-    JSON.parse(atob(token.split(".")[1]));
+  const decodeToken = (token) => {
+    try {
+      return JSON.parse(atob(token.split(".")[1]));
+    } catch {
+      return null;
+    }
+  };
 
   const validate = () => {
     if (!EMAIL_REGEX.test(form.email)) {
@@ -26,6 +31,25 @@ const Login = () => {
     return true;
   };
 
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+
+    setForm((prev) => ({ ...prev, [name]: value }));
+
+    // Live validation
+    if (name === "email") {
+      if (!EMAIL_REGEX.test(value)) {
+        setError("Please enter a valid email address");
+      } else {
+        setError("");
+      }
+    }
+
+    if (name === "password" && value.trim()) {
+      setError("");
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
@@ -35,6 +59,11 @@ const Login = () => {
     try {
       const res = await loginUser(form);
       const payload = decodeToken(res.access_token);
+
+      if (!payload?.role) {
+        setError("Invalid token received");
+        return;
+      }
 
       login(res.access_token, payload.role);
 
@@ -72,13 +101,11 @@ const Login = () => {
           </label>
           <input
             type="email"
+            name="email"
             placeholder="email@example.com"
-            className="w-full border rounded px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500"
             value={form.email}
-            onChange={(e) =>
-              setForm({ ...form, email: e.target.value })
-            }
-            required
+            onChange={handleChange}
+            className="w-full border rounded px-3 py-2 text-sm"
           />
         </div>
 
@@ -88,13 +115,11 @@ const Login = () => {
           </label>
           <input
             type="password"
+            name="password"
             placeholder="your_password"
-            className="w-full border rounded px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500"
             value={form.password}
-            onChange={(e) =>
-              setForm({ ...form, password: e.target.value })
-            }
-            required
+            onChange={handleChange}
+            className="w-full border rounded px-3 py-2 text-sm"
           />
         </div>
 

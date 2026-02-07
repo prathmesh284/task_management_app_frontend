@@ -9,3 +9,10 @@ export const getAllUsers = async () => {
   const res = await api.get("/users");
   return res.data;
 };
+
+export const getEmployees = async () => {
+  const res = await api.get("/users", {
+    params: { role: "employee" },
+  });
+  return res.data;
+};

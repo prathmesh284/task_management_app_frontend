@@ -39,6 +39,41 @@ const Register = () => {
     return true;
   };
 
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+
+    setForm((prev) => ({ ...prev, [name]: value }));
+
+    // Name validation
+    if (name === "name") {
+      if (!value.trim()) {
+        setError("Name is required");
+      } else {
+        setError("");
+      }
+    }
+
+    // Email validation
+    if (name === "email") {
+      if (!EMAIL_REGEX.test(value)) {
+        setError("Invalid email address");
+      } else {
+        setError("");
+      }
+    }
+
+    // Password validation
+    if (name === "password") {
+      if (!PASSWORD_REGEX.test(value)) {
+        setError(
+          "Password must be at least 8 characters, include uppercase, lowercase, number, and special character"
+        );
+      } else {
+        setError("");
+      }
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
@@ -54,7 +89,7 @@ const Register = () => {
     } catch (err) {
       setError(
         err?.response?.data?.detail ||
-          "Registration failed. Please try again."
+        "Registration failed. Please try again."
       );
     }
   };
@@ -82,33 +117,31 @@ const Register = () => {
         )}
 
         <input
+          name="name"
           placeholder="Full Name"
-          className="w-full border rounded px-3 py-2 text-sm"
           value={form.name}
-          onChange={(e) =>
-            setForm({ ...form, name: e.target.value })
-          }
+          onChange={handleChange}
+          className="w-full border rounded px-3 py-2 text-sm"
         />
 
         <input
           type="email"
+          name="email"
           placeholder="Email address"
-          className="w-full border rounded px-3 py-2 text-sm"
           value={form.email}
-          onChange={(e) =>
-            setForm({ ...form, email: e.target.value })
-          }
+          onChange={handleChange}
+          className="w-full border rounded px-3 py-2 text-sm"
         />
 
         <input
           type="password"
+          name="password"
           placeholder="Password"
-          className="w-full border rounded px-3 py-2 text-sm"
           value={form.password}
-          onChange={(e) =>
-            setForm({ ...form, password: e.target.value })
-          }
+          onChange={handleChange}
+          className="w-full border rounded px-3 py-2 text-sm"
         />
+
 
         <button className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700">
           Register
