@@ -1,6 +1,21 @@
+/**
+ * ActiveTasks Component
+ * ---------------------
+ * This component displays tasks that are currently active
+ * (Pending or In Progress) and due soon.
+ * It acts as a wrapper around the TaskList component.
+ */
+
 import TaskList from "./TaskList";
 
+
 const ActiveTasks = ({ tasks }) => {
+  /**
+   * Filter tasks that are still active.
+   * Active tasks include:
+   * - Pending
+   * - In Progress
+   */
   const activeTasks = tasks.filter(
     (t) => t.status === "Pending" || t.status === "In Progress"
   );

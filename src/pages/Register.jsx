@@ -1,12 +1,38 @@
+/**
+ * Register Page
+ * -------------
+ * This page allows new users to create an account.
+ * It performs client-side validation for name, email,
+ * and password before submitting registration data
+ * to the backend.
+ */
+
 import { useState } from "react";
-import { registerUser } from "../api/auth.api";
 import { useNavigate } from "react-router-dom";
 
+import { registerUser } from "../api/auth.api";
+
+
+/**
+ * Regex for email validation.
+ */
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+/**
+ * Regex for strong password validation.
+ * Requirements:
+ * - Minimum 8 characters
+ * - At least one uppercase letter
+ * - At least one lowercase letter
+ * - At least one number
+ * - At least one special character
+ */
 const PASSWORD_REGEX =
   /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?#&])[A-Za-z\d@$!%*?#&]{8,}$/;
 
+
 const Register = () => {
+  // Form state for registration fields
   const [form, setForm] = useState({
     name: "",
     email: "",
@@ -14,10 +40,18 @@ const Register = () => {
     role: "employee"
   });
 
+  // Error and success message states
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+
+  // Navigation hook
   const navigate = useNavigate();
 
+  /**
+   * Validate registration form inputs.
+   *
+   * @returns {boolean} True if valid, otherwise false
+   */
   const validate = () => {
     if (!form.name.trim()) {
       setError("Name is required");
@@ -39,6 +73,9 @@ const Register = () => {
     return true;
   };
 
+  /**
+   * Handle input changes with live validation.
+   */
   const handleChange = (e) => {
     const { name, value } = e.target;
 
@@ -74,6 +111,11 @@ const Register = () => {
     }
   };
 
+  /**
+   * Handle form submission.
+   * Sends registration data to backend and
+   * redirects user to login page on success.
+   */
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
@@ -85,6 +127,7 @@ const Register = () => {
       await registerUser(form);
       setSuccess("Account created successfully. You can now log in.");
 
+      // Redirect to login after short delay
       setTimeout(() => navigate("/"), 2000);
     } catch (err) {
       setError(
@@ -104,18 +147,21 @@ const Register = () => {
           Create an account
         </h2>
 
+        {/* Error Message */}
         {error && (
           <div className="bg-red-100 text-red-700 text-sm px-3 py-2 rounded">
             {error}
           </div>
         )}
 
+        {/* Success Message */}
         {success && (
           <div className="bg-green-100 text-green-700 text-sm px-3 py-2 rounded">
             {success}
           </div>
         )}
 
+        {/* Name Input */}
         <input
           name="name"
           placeholder="Full Name"
@@ -124,6 +170,7 @@ const Register = () => {
           className="w-full border rounded px-3 py-2 text-sm"
         />
 
+        {/* Email Input */}
         <input
           type="email"
           name="email"
@@ -133,6 +180,7 @@ const Register = () => {
           className="w-full border rounded px-3 py-2 text-sm"
         />
 
+        {/* Password Input */}
         <input
           type="password"
           name="password"
@@ -142,11 +190,12 @@ const Register = () => {
           className="w-full border rounded px-3 py-2 text-sm"
         />
 
-
+        {/* Submit Button */}
         <button className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700">
           Register
         </button>
 
+        {/* Password Hint */}
         <p className="text-xs text-gray-500">
           Password must contain uppercase, lowercase, number, and special character.
         </p>

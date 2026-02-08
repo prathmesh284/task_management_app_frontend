@@ -1,3 +1,10 @@
+/**
+ * Section Component
+ * -----------------
+ * Displays a grouped list of users under a given title.
+ * Used to separate users by role (Admins / Employees).
+ */
+
 const Section = ({ title, users }) => {
   return (
     <div className="mb-8">
@@ -16,16 +23,20 @@ const Section = ({ title, users }) => {
               key={user.id}
               className="p-4 flex justify-between items-center"
             >
+              {/* USER DETAILS */}
               <div>
                 <p className="font-medium">
                   ID: EMP-{user.id}
                 </p>
-                <p className="font-medium">Name: {user.name}</p>
+                <p className="font-medium">
+                  Name: {user.name}
+                </p>
                 <p className="text-xs text-gray-500">
                   {user.email}
                 </p>
               </div>
 
+              {/* ROLE BADGE */}
               <span className="text-xs px-2 py-1 rounded-full bg-gray-100 text-gray-700">
                 {user.role}
               </span>

@@ -1,3 +1,15 @@
+/*
+Global Styles Configuration
+---------------------------
+This file initializes Tailwind CSS by importing
+its base styles, component classes, and utility classes.
+*/
+
+/* Base styles (CSS reset & default typography) */
 @tailwind base;
+
+/* Pre-built component styles (buttons, forms, etc.) */
 @tailwind components;
+
+/* Utility classes (margin, padding, flex, colors, etc.) */
 @tailwind utilities;

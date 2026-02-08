@@ -1,10 +1,28 @@
+/**
+ * TaskForm Component
+ * ------------------
+ * This component allows an admin to create and assign
+ * a new task to an employee.
+ * It performs client-side validation, fetches employees
+ * dynamically, and submits task data to the backend.
+ */
+
 import { useEffect, useState } from "react";
 import { createTask } from "../api/task.api";
 import { getEmployees } from "../api/user.api";
 
+
+/**
+ * Regex for validating task title.
+ * Rules:
+ * - Minimum 5 characters
+ * - Allows letters, numbers, spaces, commas, and dots
+ */
 const TITLE_REGEX = /^[A-Za-z0-9,. ]{5,}$/;
 
+
 const TaskForm = ({ onTaskCreated }) => {
+  // Form state
   const [form, setForm] = useState({
     title: "",
     description: "",
@@ -12,13 +30,23 @@ const TaskForm = ({ onTaskCreated }) => {
     due_date: "",
   });
 
+  // Validation and UI states
   const [errors, setErrors] = useState({});
   const [successMsg, setSuccessMsg] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
   const [submitting, setSubmitting] = useState(false);
-  const today = new Date().toISOString().split("T")[0];
+
+  // List of employees for assignment
   const [employees, setEmployees] = useState([]);
 
+  // Today’s date (used to restrict due date)
+  const today = new Date().toISOString().split("T")[0];
+
+  /**
+   * Validate form inputs before submission.
+   *
+   * @returns {boolean} True if form is valid
+   */
   const validate = () => {
     const errs = {};
 
@@ -47,6 +75,9 @@ const TaskForm = ({ onTaskCreated }) => {
     return Object.keys(errs).length === 0;
   };
 
+  /**
+   * Handle input changes with live validation.
+   */
   const handleChange = (e) => {
     const { name, value } = e.target;
 
@@ -68,10 +99,15 @@ const TaskForm = ({ onTaskCreated }) => {
       }
     }
 
+    // Clear global messages on change
     setSuccessMsg("");
     setErrorMsg("");
   };
 
+  /**
+   * Handle form submission.
+   * Sends validated task data to backend API.
+   */
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validate()) return;
@@ -88,12 +124,14 @@ const TaskForm = ({ onTaskCreated }) => {
 
       const newTask = await createTask(payload);
 
+      // Notify parent component if callback is provided
       if (typeof onTaskCreated === "function") {
         onTaskCreated(newTask);
       }
 
       setSuccessMsg("✅ Task created successfully.");
 
+      // Reset form
       setForm({
         title: "",
         description: "",
@@ -113,6 +151,9 @@ const TaskForm = ({ onTaskCreated }) => {
     }
   };
 
+  /**
+   * Fetch employee list on component mount.
+   */
   useEffect(() => {
     getEmployees()
       .then(setEmployees)
@@ -144,6 +185,7 @@ const TaskForm = ({ onTaskCreated }) => {
             </div>
           )}
 
+          {/* TITLE */}
           <div>
             <input
               name="title"
@@ -159,6 +201,7 @@ const TaskForm = ({ onTaskCreated }) => {
             )}
           </div>
 
+          {/* DESCRIPTION */}
           <input
             name="description"
             placeholder="Description (optional)"
@@ -167,6 +210,7 @@ const TaskForm = ({ onTaskCreated }) => {
             onChange={handleChange}
           />
 
+          {/* ASSIGN + DUE DATE */}
           <div className="grid grid-cols-2 gap-4">
             <div>
               <select
@@ -176,7 +220,6 @@ const TaskForm = ({ onTaskCreated }) => {
                 onChange={handleChange}
               >
                 <option value="">Select Employee</option>
-
                 {employees.map((emp) => (
                   <option key={emp.id} value={emp.id}>
                     EMP-{emp.id} - {emp.name}
@@ -200,7 +243,6 @@ const TaskForm = ({ onTaskCreated }) => {
                 value={form.due_date}
                 onChange={handleChange}
               />
-
               {errors.due_date && (
                 <p className="text-xs text-red-600 mt-1">
                   {errors.due_date}
@@ -209,6 +251,7 @@ const TaskForm = ({ onTaskCreated }) => {
             </div>
           </div>
 
+          {/* SUBMIT BUTTON */}
           <button
             type="submit"
             disabled={submitting}

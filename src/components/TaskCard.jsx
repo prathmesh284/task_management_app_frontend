@@ -1,12 +1,32 @@
+/**
+ * TaskCard Component
+ * ------------------
+ * Displays detailed information about a task for admin users.
+ * Provides actions to edit, delete, comment, and view comments
+ * through a contextual dropdown menu.
+ */
+
 import { FiEdit2, FiTrash2, FiMessageSquare } from "react-icons/fi";
 import { useState, useRef, useEffect } from "react";
 import { formatDate } from "./FormatDate";
 
-const TaskCard = ({ task, onEdit, onDelete, onComment, onShowComments }) => {
+
+const TaskCard = ({
+  task,
+  onEdit,
+  onDelete,
+  onComment,
+  onShowComments
+}) => {
+  // State to control dropdown menu visibility
   const [openMenu, setOpenMenu] = useState(false);
+
+  // Ref to detect outside clicks for menu
   const menuRef = useRef(null);
 
-  // 🔹 Close menu on outside click
+  /**
+   * Close menu when clicking outside of it.
+   */
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (menuRef.current && !menuRef.current.contains(e.target)) {
@@ -15,9 +35,13 @@ const TaskCard = ({ task, onEdit, onDelete, onComment, onShowComments }) => {
     };
 
     document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
+    return () =>
+      document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  /**
+   * Helper to close menu and then execute an action.
+   */
   const closeAnd = (fn) => {
     setOpenMenu(false);
     fn && fn();
@@ -25,7 +49,7 @@ const TaskCard = ({ task, onEdit, onDelete, onComment, onShowComments }) => {
 
   return (
     <div className="bg-white border rounded-lg shadow-sm p-4 flex flex-col justify-between h-full relative">
-      {/* TOP */}
+      {/* HEADER */}
       <div>
         <div className="flex justify-between items-start mb-2">
           <h3 className="font-semibold text-gray-800 mr-8">
@@ -33,7 +57,7 @@ const TaskCard = ({ task, onEdit, onDelete, onComment, onShowComments }) => {
           </h3>
 
           <div className="flex gap-4">
-            {/* STATUS */}
+            {/* STATUS BADGE */}
             <span
               className={`inline-block text-xs px-2 py-1 rounded ${
                 task.status === "Completed"
@@ -46,7 +70,7 @@ const TaskCard = ({ task, onEdit, onDelete, onComment, onShowComments }) => {
               {task.status}
             </span>
 
-            {/* MENU */}
+            {/* ACTION MENU */}
             <div className="relative" ref={menuRef}>
               <button
                 onClick={() => setOpenMenu((p) => !p)}

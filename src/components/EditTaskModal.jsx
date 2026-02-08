@@ -1,9 +1,27 @@
+/**
+ * EditTaskModal Component
+ * ----------------------
+ * This component provides a modal interface for editing
+ * existing task details such as title, description,
+ * and due date. It performs both live and submit-time
+ * validation before updating the task.
+ */
+
 import { useState } from "react";
 import { updateTask } from "../api/task.api";
 
+
+/**
+ * Regex for validating task title.
+ * Rules:
+ * - Minimum 5 characters
+ * - Allows alphabets, numbers, spaces, commas, and dots
+ */
 const TITLE_REGEX = /^[A-Za-z0-9,. ]{5,}$/;
 
+
 const EditTaskModal = ({ task, onClose }) => {
+  // Form state initialized with existing task data
   const [form, setForm] = useState({
     title: task.title,
     description: task.description || "",
@@ -11,12 +29,20 @@ const EditTaskModal = ({ task, onClose }) => {
     due_date: task.due_date,
   });
 
+  // Validation error state
   const [errors, setErrors] = useState({});
+
+  // Submission state to prevent duplicate requests
   const [submitting, setSubmitting] = useState(false);
 
+  // Current date (used to restrict due date selection)
   const today = new Date().toISOString().split("T")[0];
 
-  // 🔹 Full validation (on submit)
+  /**
+   * Full validation executed on form submission.
+   *
+   * @returns {boolean} True if form is valid
+   */
   const validate = () => {
     const errs = {};
 
@@ -33,7 +59,11 @@ const EditTaskModal = ({ task, onClose }) => {
     return Object.keys(errs).length === 0;
   };
 
-  // 🔹 Live validation (on change)
+  /**
+   * Live validation handler.
+   * Updates form state and clears/adds validation errors
+   * as the user edits fields.
+   */
   const handleChange = (e) => {
     const { name, value } = e.target;
 
@@ -63,6 +93,11 @@ const EditTaskModal = ({ task, onClose }) => {
     });
   };
 
+  /**
+   * Handle form submission.
+   * Updates task details via API and refreshes the page
+   * after a successful update.
+   */
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validate()) return;
@@ -72,7 +107,7 @@ const EditTaskModal = ({ task, onClose }) => {
     try {
       await updateTask(task.id, form);
 
-      // ✅ Auto refresh after successful update
+      // Refresh page to reflect updated task data
       window.location.reload();
     } catch {
       alert("Failed to update task");
@@ -87,7 +122,9 @@ const EditTaskModal = ({ task, onClose }) => {
         onSubmit={handleSubmit}
         className="bg-white w-full max-w-md p-6 rounded shadow space-y-4"
       >
-        <h2 className="text-lg font-semibold">Edit Task</h2>
+        <h2 className="text-lg font-semibold">
+          Edit Task
+        </h2>
 
         {/* TITLE */}
         <div>
@@ -98,7 +135,9 @@ const EditTaskModal = ({ task, onClose }) => {
             onChange={handleChange}
           />
           {errors.title && (
-            <p className="text-xs text-red-600 mt-1">{errors.title}</p>
+            <p className="text-xs text-red-600 mt-1">
+              {errors.title}
+            </p>
           )}
         </div>
 
@@ -122,10 +161,13 @@ const EditTaskModal = ({ task, onClose }) => {
             onChange={handleChange}
           />
           {errors.due_date && (
-            <p className="text-xs text-red-600 mt-1">{errors.due_date}</p>
+            <p className="text-xs text-red-600 mt-1">
+              {errors.due_date}
+            </p>
           )}
         </div>
 
+        {/* ACTION BUTTONS */}
         <div className="flex justify-end gap-2 pt-2">
           <button
             type="button"

@@ -1,9 +1,22 @@
+/**
+ * AddCommentModal Component
+ * ------------------------
+ * This component renders a modal dialog that allows
+ * users to add a comment to a specific task.
+ */
+
 import { useState } from "react";
 import { createComment } from "../api/comment.api";
 
+
 const AddCommentModal = ({ taskId, onClose }) => {
+  // State to store comment input
   const [comment, setComment] = useState("");
 
+  /**
+   * Handle form submission.
+   * Sends the comment to backend and closes the modal.
+   */
   const handleSubmit = async (e) => {
     e.preventDefault();
     await createComment(taskId, comment);
@@ -16,8 +29,11 @@ const AddCommentModal = ({ taskId, onClose }) => {
         onSubmit={handleSubmit}
         className="bg-white w-full max-w-md p-6 rounded shadow space-y-4"
       >
-        <h2 className="text-lg font-semibold">Add Comment</h2>
+        <h2 className="text-lg font-semibold">
+          Add Comment
+        </h2>
 
+        {/* Comment Input */}
         <textarea
           className="w-full border px-3 py-2 rounded"
           rows={4}
@@ -27,10 +43,15 @@ const AddCommentModal = ({ taskId, onClose }) => {
           required
         />
 
+        {/* Action Buttons */}
         <div className="flex justify-end gap-2">
-          <button type="button" onClick={onClose}>
+          <button
+            type="button"
+            onClick={onClose}
+          >
             Cancel
           </button>
+
           <button className="bg-blue-600 text-white px-4 py-2 rounded">
             Add
           </button>

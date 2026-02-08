@@ -1,22 +1,44 @@
-import { updateTaskStatus } from "../api/task.api";
-import { FiEdit2, FiMessageSquare } from "react-icons/fi";
+/**
+ * EmployeeTaskCard Component
+ * -------------------------
+ * This component displays an individual task assigned to an employee.
+ * It allows the employee to:
+ *  - Progress task status (Pending → In Progress → Completed)
+ *  - View task comments via a contextual menu
+ */
+
 import { useState, useRef, useEffect } from "react";
+import { FiEdit2, FiMessageSquare } from "react-icons/fi";
+
+import { updateTaskStatus } from "../api/task.api";
+
 
 const EmployeeTaskCard = ({ task, onStatusChange, onShowComments }) => {
+  // State to control dropdown menu visibility
   const [openMenu, setOpenMenu] = useState(false);
+
+  // Ref for detecting outside clicks
   const menuRef = useRef(null);
 
-  // close menu on outside click
+  /**
+   * Close the dropdown menu when clicking outside of it.
+   */
   useEffect(() => {
     const handler = (e) => {
       if (menuRef.current && !menuRef.current.contains(e.target)) {
         setOpenMenu(false);
       }
     };
+
     document.addEventListener("mousedown", handler);
     return () => document.removeEventListener("mousedown", handler);
   }, []);
 
+  /**
+   * Handle task status update.
+   * Follows allowed workflow:
+   * Pending → In Progress → Completed
+   */
   const handleUpdate = async () => {
     let nextStatus = null;
 
@@ -26,9 +48,14 @@ const EmployeeTaskCard = ({ task, onStatusChange, onShowComments }) => {
     if (!nextStatus) return;
 
     await updateTaskStatus(task.id, nextStatus);
+
+    // Update parent component state
     onStatusChange(task.id, nextStatus);
   };
 
+  /**
+   * Returns button configuration based on task status.
+   */
   const getButtonConfig = () => {
     switch (task.status) {
       case "Pending":
@@ -50,11 +77,14 @@ const EmployeeTaskCard = ({ task, onStatusChange, onShowComments }) => {
 
   return (
     <div className="bg-white border rounded-lg shadow-sm p-4 flex flex-col justify-between">
-      {/* TOP */}
+      {/* HEADER */}
       <div>
         <div className="flex justify-between items-start mb-2">
-          <h3 className="font-semibold text-gray-800">{task.title}</h3>
+          <h3 className="font-semibold text-gray-800">
+            {task.title}
+          </h3>
 
+          {/* OPTIONS MENU */}
           <div className="relative" ref={menuRef}>
             <button
               onClick={() => setOpenMenu((p) => !p)}
@@ -72,14 +102,15 @@ const EmployeeTaskCard = ({ task, onStatusChange, onShowComments }) => {
                   }}
                   className="flex items-center gap-2 w-full px-3 py-2 hover:bg-gray-100"
                 >
-                  <FiMessageSquare /> Show Comments
+                  <FiMessageSquare />
+                  Show Comments
                 </button>
               </div>
             )}
           </div>
         </div>
 
-        {/* STATUS */}
+        {/* STATUS BADGE */}
         <span
           className={`inline-block text-xs px-2 py-1 rounded-full mb-2 ${
             task.status === "Completed"
@@ -100,7 +131,7 @@ const EmployeeTaskCard = ({ task, onStatusChange, onShowComments }) => {
         )}
       </div>
 
-      {/* ACTION */}
+      {/* ACTION BUTTON */}
       {buttonConfig && (
         <button
           onClick={handleUpdate}

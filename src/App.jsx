@@ -1,24 +1,42 @@
+/**
+ * App Component
+ * -------------
+ * This is the root component of the frontend application.
+ * It defines all client-side routes, authentication context,
+ * and role-based route protection.
+ */
+
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+
 import Login from "./pages/Login";
+import Register from "./pages/Register";
 import AdminDashboard from "./pages/AdminDashboard";
 import EmployeeDashboard from "./pages/EmployeeDashboard";
-import ProtectedRoute from "./routes/ProtectedRoute";
-import { AuthProvider } from "./context/AuthContext";
+import UsersPage from "./pages/UsersPage";
+
 import TaskForm from "./components/TaskForm";
 import TaskHistory from "./components/TaskHistory";
-import UsersPage from "./pages/UsersPage";
-import Register from "./pages/Register";
+
+import ProtectedRoute from "./routes/ProtectedRoute";
+import { AuthProvider } from "./context/AuthContext";
+
 
 function App() {
   return (
+    /**
+     * BrowserRouter enables client-side routing.
+     * AuthProvider wraps the application to provide
+     * authentication state globally.
+     */
     <BrowserRouter>
       <AuthProvider>
 
         <Routes>
+          {/* Public Routes */}
           <Route path="/" element={<Login />} />
-          
-          <Route path="/register" element={<Register/>}/>
+          <Route path="/register" element={<Register />} />
 
+          {/* Employee Routes */}
           <Route
             path="/employee"
             element={
@@ -28,6 +46,7 @@ function App() {
             }
           />
 
+          {/* Admin Routes */}
           <Route
             path="/admin"
             element={
@@ -64,6 +83,7 @@ function App() {
             }
           />
         </Routes>
+
       </AuthProvider>
     </BrowserRouter>
   );
