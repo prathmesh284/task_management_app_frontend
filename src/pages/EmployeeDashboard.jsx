@@ -2,9 +2,11 @@ import { useEffect, useState } from "react";
 import { getMyTasks } from "../api/task.api";
 import EmployeeTaskCard from "../components/EmployeeTaskCard";
 import TaskProgress from "../components/TaskProgress";
+import EmpTaskCommentsDrawer from "../components/EmpTaskCommentDrawer";
 
 const EmployeeDashboard = () => {
   const [tasks, setTasks] = useState([]);
+  const [activeTask, setActiveTask] = useState(null);
 
   useEffect(() => {
     getMyTasks().then(setTasks);
@@ -34,7 +36,7 @@ const EmployeeDashboard = () => {
           completed={completedCount}
         />
 
-        <div className="grid gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {tasks.length === 0 ? (
             <p className="text-gray-500">No tasks assigned.</p>
           ) : (
@@ -43,8 +45,15 @@ const EmployeeDashboard = () => {
                 key={task.id}
                 task={task}
                 onStatusChange={handleStatusChange}
+                onShowComments={setActiveTask}
               />
             ))
+          )}
+          {activeTask && (
+            <EmpTaskCommentsDrawer
+              task={activeTask}
+              onClose={() => setActiveTask(null)}
+            />
           )}
         </div>
       </div>
